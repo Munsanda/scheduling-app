@@ -1,38 +1,90 @@
-.App {
+body {
+  background-color: #f5f5f5;
+  font-family: 'Courier New', monospace;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+fieldset {
+  background-color: #dcdcdc;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  max-width: 400px;
+}
+
+h1 {
   text-align: center;
+  color: #4b0082; /* Indigo */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+form {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+}
+
+label {
+  font-size: 18px;
+  margin-top: 10px;
+  color: #ff4500; /* Orange Red */
+}
+
+input,
+textarea,
+select {
+  padding: 8px;
+  border: 1px solid #800080; /* Purple */
+  border-radius: 4px;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+button {
+  background-color: #800080; /* Purple */
   color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.App-link {
-  color: #61dafb;
+button:hover {
+  background-color: #4b0082; /* Indigo */
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+input:hover {
+  background-color: #e3c4f9;
 }
+
+.top-items {
+  display: flex;
+  justify-content: center; /* Adjust the alignment as needed */
+  align-items: center; /* Adjust the alignment as needed */
+}
+
+#frequency, .interval {
+  display: flex;
+  justify-content: space-between; /* Adjust the alignment as needed */
+  align-items: center; /* Adjust the alignment as needed */
+}
+
+.days_of_the_week {
+  display: flex;
+  justify-content: space-between; /* Adjust the alignment as needed */
+  align-items:start; /* Adjust the alignment as needed */
+
+  
+}
+
+
+
+
+
+
+
+

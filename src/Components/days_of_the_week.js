@@ -13,7 +13,7 @@ function Days_of_the_week({handleInputChange, days_of_the_week}){
       }
 
     return (
-        <div className="form-control my-3" value = {days_of_the_week} onChange={ (e) => handleInputChanges(e.target.value, e.target.checked)} onSubmit={handleInputChange} >
+        <div className="form-control days_of_the_week" value = {days_of_the_week} onChange={ (e) => handleInputChanges(e.target.value, e.target.checked)} onSubmit={handleInputChange} >
             <label for="Sunday">S</label>
             <input type="checkbox" value="Sunday"  id="Sunday" name="day" />
             <label for="Monday">M</label>
