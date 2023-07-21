@@ -2,32 +2,35 @@ import { Component} from "react";
 import { useState } from "react";
 
 
-function Days_of_the_week({handleInputChange, days_of_the_week}){
+function Days_of_the_week({handleInputChange, days_of_the_week, dayslist}){
 
     const [data, setData] = useState([])
 
-      const handleInputChanges = (name, value) => {
-        
-        value == true? setData({ ...data, [name]: value }): data.splice(name,1);
-        console.log(data);
+    const handleInputChanges = (name, value) => {
+      if (value) {
+        // Add the new item to the data array
+        setData((prevData) => [...prevData, { [name]: value }]);
+      } else {
+        // Remove the item with the specified name from the data array
+        setData((prevData) => prevData.filter((item) => !item.hasOwnProperty(name)));
       }
+
+      days_of_the_week = data;
+    };
+
+    console.log(days_of_the_week);
 
     return (
         <div className="form-control days_of_the_week" value = {days_of_the_week} onChange={ (e) => handleInputChanges(e.target.value, e.target.checked)} onSubmit={handleInputChange} >
-            <label for="Sunday">S</label>
-            <input type="checkbox" value="Sunday"  id="Sunday" name="day" />
-            <label for="Monday">M</label>
-            <input type="checkbox" value= "Monday"  label="Monday" name="day" />
-            <label for="Tuesday">T</label>
-            <input type="checkbox" value="Tuesday" label="Tuesday" name="day" />
-            <label for="Wednesday">W</label>
-            <input type="checkbox" value= "Wednesday" label="Wednesday" name="day" />
-            <label for="Thursday">S</label>
-            <input type="checkbox" value= "Thursday" label="Thursday"  name=" day"/>
-            <label for="Friday">F</label>
-            <input type="checkbox" value="Friday" label="Friday" name="day" />
-            <label for="Saturday">S</label>
-            <input type="checkbox" value= "Saturday" label="Saturday" name="day"/>
+            {dayslist.map(day => {
+              return (
+                (day != "")?
+                <div className="Container">
+                  <label htmlFor={day}>{day[0]}</label>
+                  <input type="checkbox" value= {day} label={day} name="day"/>
+                </div>: ""
+              )
+            })}
         </div>
     );
 }

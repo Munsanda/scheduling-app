@@ -8,7 +8,7 @@ function Interval_input({handleInputChange, intervals, id}){
         <div className="input-group">
         <label htmlFor={id}></label>
         
-        {console.log(id)}
+        
         <select name={id} id={id} onChange={handleInputChange}>
             {
                 intervals.map(interv => {

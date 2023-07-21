@@ -10,11 +10,11 @@ function generateCronExpression(jsonData) {
     let cronExpression = "";
     //time
     const splittime = jsonData.time.split(':')
-    cronExpression += splittime[1]; //minutes
-    cronExpression += splittime[0]; //hours
+    cronExpression += " " + splittime[1]; //minutes
+    cronExpression += " " + splittime[0]; //hours
 
     //days of the month
-    cronExpression = calculateCronDayNumber(jsonData.week_number,jsonData.day);
+    cronExpression += " " + calculateCronDayNumber(jsonData.week_number,jsonData.day);
 
     console.log(cronExpression);
 
@@ -25,10 +25,9 @@ function generateCronExpression(jsonData) {
     const weekIntervals = ['first','second','third','fourth','last'];
     const daysIntervals = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday','Friday','Saturday'];
 
-    const weekIndex = weekIntervals.indexOf(weekInterval);
-    const dayIndex = daysIntervals.indexOf(dayInterval);
+    const weekIndex = weekIntervals.indexOf(weekInterval) + 1;
+    const dayIndex = daysIntervals.indexOf(dayInterval) + 1;
 
-    console.log(weekInterval)
   
     if (weekIndex <= 0 || dayIndex <= 0) {
       throw new Error("Invalid week or day interval.");
@@ -126,10 +125,10 @@ const Main = () =>{
 
                         <div className="Week" id="Week">
                             
-                        {(whattorender[0].week == true)?<Days_of_the_week days_of_the_week = {formInputData.days_of_the_week} handleInputChange={handleInputChange}/>: '' }
+                        {(whattorender[0].week == true)?<Days_of_the_week days_of_the_week = {formInputData.days_of_the_week} handleInputChange={handleInputChange} dayslist= {daysIntervals}/>: '' }
                         </div>
 
-                        <div className="Month" id="Month">
+                        <div className="Month top-items" id="Month">
                         {(whattorender[0].month == true)?<Interval_input week_number = {formInputData.week_number} handleInputChange={handleInputChange} intervals={weekIntervals} id = "week_number"/>: '' }
                         {(whattorender[0].month == true)?<Interval_input day = {formInputData.day} handleInputChange={handleInputChange} intervals={daysIntervals} id ="day"/>: '' }
                         </div>
