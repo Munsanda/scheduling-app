@@ -14,7 +14,7 @@ function generateCronExpression(jsonData) {
     cronExpression += splittime[0]; //hours
 
     //days of the month
-    cronExpression += calculateCronDayNumber(jsonData.week_number,jsonData.day);
+    cronExpression = calculateCronDayNumber(jsonData.week_number,jsonData.day);
 
     console.log(cronExpression);
 
@@ -56,11 +56,10 @@ const Main = () =>{
     const allintervals = ['', 'day', 'week', 'month', ,'year'];
     const weekIntervals = ['','first','second','third','fourth','last'];
     const daysIntervals = ['','Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday','Friday','Saturday'];
-    let week= null;
-    let month = null;
     
+    const [whattorender, Setwhattorender] = useState([{week:false, month:false}])
 
-    //const [formData, setFormData] = useState([])
+
     const [formInputData, setFormInputData] = useState({ //the data 
         frequency:'',
         interval:'',
@@ -81,34 +80,21 @@ const Main = () =>{
 
         //handles the rendering of components depending on the interval chosen
 
-
-        if((!week) && (!month)){
-            week = ReactDOM.createRoot(document.getElementById('Week'));
-            month = ReactDOM.createRoot(document.getElementById('Month'));
-        }
-
         if(inputFieldValue === 'week'){
-            week.render(
-                <Days_of_the_week days_of_the_week = {formInputData.days_of_the_week} handleInputChange={handleInputChange}/>
-            )               
-            month.unmount();       
+            const newweekmonth = [{week: true, month:false}];
+            Setwhattorender(newweekmonth);
+            
         }
         else if(inputFieldValue === 'month'){  
-                     
-            month.render(
-                <div className='top-items'>
-                    <Interval_input week_number = {formInputData.week_number} handleInputChange={handleInputChange} intervals={weekIntervals} id = "week_number" /> 
-                    <Interval_input day = {formInputData.day} handleInputChange={handleInputChange} intervals={daysIntervals} id ="day" />
-                </div>
-                 )
-            week.unmount();
+            const newweekmonth = [{week: false, month:true}];
+            Setwhattorender(newweekmonth);
         }
         else if(inputFieldValue === 'day' || inputFieldValue === 'year'){
-            week.unmount();
-            month.unmount();
+            const newweekmonth = [{week: false, month:false}];
+            Setwhattorender(newweekmonth);
         }
         else{
- 
+
         }
             
 
@@ -139,12 +125,13 @@ const Main = () =>{
                         <hr/>
 
                         <div className="Week" id="Week">
-                            {/* <Days_of_the_week days_of_the_week = {formInputData.days_of_the_week} handleInputChange={handleInputChange}/>  */}
+                            
+                        {(whattorender[0].week == true)?<Days_of_the_week days_of_the_week = {formInputData.days_of_the_week} handleInputChange={handleInputChange}/>: '' }
                         </div>
 
                         <div className="Month" id="Month">
-                            {/* <Interval_input week_number = {formInputData.week_number} handleInputChange={handleInputChange} intervals={weekIntervals} id = "week_number" /> 
-                            <Interval_input day = {formInputData.day} handleInputChange={handleInputChange} intervals={daysIntervals} id ="day" />  */}
+                        {(whattorender[0].month == true)?<Interval_input week_number = {formInputData.week_number} handleInputChange={handleInputChange} intervals={weekIntervals} id = "week_number"/>: '' }
+                        {(whattorender[0].month == true)?<Interval_input day = {formInputData.day} handleInputChange={handleInputChange} intervals={daysIntervals} id ="day"/>: '' }
                         </div>
                         
                         <Frequency_input time = {formInputData.time} handleInputChange={handleInputChange} input_type = "time" id = "time"/>
