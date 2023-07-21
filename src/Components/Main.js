@@ -12,8 +12,14 @@ function generateCronExpression(jsonData) {
     let cronExpression = "";
     //time
     const splittime = jsonData.time.split(':')
-    cronExpression += " " + splittime[1] ; //minutes
-    cronExpression += " " + splittime[0]; //hours
+    if(jsonData.time !== ''){
+        cronExpression += " " + splittime[1] ; //minutes
+        cronExpression += " " + splittime[0]; //hours
+    }
+    else{
+        cronExpression += " " + '*' ; //minutes
+        cronExpression += " " + '*'; //hours
+    }
 
     //days of the month 
     const dotm = calculateCronDayNumber(jsonData.week_number,jsonData.day);
@@ -21,7 +27,7 @@ function generateCronExpression(jsonData) {
 
     //month
     if(jsonData.interval === 'month'){
-        cronExpression += " " + jsonData.frequency + '  *';
+        cronExpression += " " + jsonData.frequency;
     }
     else {
         cronExpression += '  *';
@@ -30,6 +36,9 @@ function generateCronExpression(jsonData) {
     //year
     if(jsonData.interval === 'year'){
         cronExpression += " " + jsonData.frequency;
+    }
+    else{
+        cronExpression += '  *';
     }
 
     console.log(cronExpression);
