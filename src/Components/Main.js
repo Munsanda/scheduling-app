@@ -67,9 +67,9 @@ function generateCronExpression(jsonData) {
   }
 
 const Main = () =>{
-    const allintervals = ['', 'day', 'week', 'month', ,'year'];
-    const weekIntervals = ['','first','second','third','fourth','last'];
-    const daysIntervals = ['','Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday','Friday','Saturday'];
+    const allintervals = ['day', 'week', 'month', ,'year'];
+    const weekIntervals = ['first','second','third','fourth','last'];
+    const daysIntervals = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday','Friday','Saturday'];
     
     const [whattorender, Setwhattorender] = useState([{week:false, month:false}])
 
@@ -144,8 +144,8 @@ const Main = () =>{
                         </div>
 
                         <div className="Month top-items" id="Month">
-                            {(whattorender[0].month == true)?<Interval_input week_number = {formInputData.week_number} handleInputChange={handleInputChange} intervals={weekIntervals} id = "week_number"/>: '' }
-                            {(whattorender[0].month == true)?<Interval_input day = {formInputData.day} handleInputChange={handleInputChange} intervals={daysIntervals} id ="day"/>: '' }
+                            {(whattorender[0].month == true)?<Interval_input week_number = {formInputData.week_number} handleInputChange={handleInputChange} intervals={weekIntervals} id = "week_number" placeholder = {"week number"}/>: '' }
+                            {(whattorender[0].month == true)?<Interval_input day = {formInputData.day} handleInputChange={handleInputChange} intervals={daysIntervals} id ="day" placeholder = {"day."}/>: '' }
                         </div>     
 
                         <Frequency_input time = {formInputData.time} handleInputChange={handleInputChange} input_type = "time" id = "time"/>

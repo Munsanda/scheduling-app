@@ -10,7 +10,9 @@ function Interval_input({handleInputChange, intervals, id, placeholder}){
         
         
         <select required name={id} id={id} onChange={handleInputChange} placeholder={placeholder}>
+        <option value="" disabled selected>{placeholder}</option>
             {
+                
                 intervals.map(interv => {
                     return (
                         <option key={interv} value={interv}> {interv} </option>
