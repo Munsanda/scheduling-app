@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function Interval_input({handleInputChange, intervals, id}){
+function Interval_input({handleInputChange, intervals, id, placeholder}){
 
     const [selectedDropdownItem, setSelectedDropdownItem] = useState(null);
     //setSelectedDropdownItem({ id: id });
@@ -9,7 +9,7 @@ function Interval_input({handleInputChange, intervals, id}){
         <label htmlFor={id}></label>
         
         
-        <select name={id} id={id} onChange={handleInputChange}>
+        <select required name={id} id={id} onChange={handleInputChange} placeholder={placeholder}>
             {
                 intervals.map(interv => {
                     return (

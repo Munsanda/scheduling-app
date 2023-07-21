@@ -14,6 +14,7 @@ fieldset {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   padding: 20px;
   max-width: 400px;
+  font-display: bold;
 }
 
 h1 {
@@ -63,7 +64,7 @@ input:hover {
 
 .top-items {
   display: flex;
-  justify-content: center; /* Adjust the alignment as needed */
+  justify-content: space-around; /* Adjust the alignment as needed */
   align-items: center; /* Adjust the alignment as needed */
 }
 

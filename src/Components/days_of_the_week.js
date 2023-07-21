@@ -15,13 +15,10 @@ function Days_of_the_week({handleInputChange, days_of_the_week, dayslist}){
         setData((prevData) => prevData.filter((item) => !item.hasOwnProperty(name)));
       }
 
-      days_of_the_week = data;
     };
 
-    console.log(days_of_the_week);
-
     return (
-        <div className="form-control days_of_the_week" value = {days_of_the_week} onChange={ (e) => handleInputChanges(e.target.value, e.target.checked)} onSubmit={handleInputChange} >
+        <div className="form-control days_of_the_week" value = {data} onChange={ (e) => handleInputChanges(e.target.value, e.target.checked)} onSubmit={handleInputChange} >
             {dayslist.map(day => {
               return (
                 (day != "")?
