@@ -26,7 +26,7 @@ function generateCronExpression(jsonData) {
     cronExpression += (dotm != '')? " " + dotm: '  *';
 
     //month
-    if(jsonData.interval === 'month'){
+    if(jsonData.interval === 'monthly'){
         cronExpression += " " + jsonData.frequency;
     }
     else {
@@ -34,7 +34,7 @@ function generateCronExpression(jsonData) {
     }
 
     //year
-    if(jsonData.interval === 'year'){
+    if(jsonData.interval === 'yearly'){
         cronExpression += " " + jsonData.frequency;
     }
     else{
@@ -76,27 +76,27 @@ function generateCronExpression(jsonData) {
   }
 
 const Main = () =>{
-    const allintervals = ['day', 'week', 'month', ,'year'];
+    const allintervals = ['daily', 'weekly', 'monthly', ,'yearly'];
     const weekIntervals = ['first','second','third','fourth','last'];
     const daysIntervals = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday','Friday','Saturday'];
     
+    //states
     const [whattorender, Setwhattorender] = useState([{week:false, month:false}])
-
     const [inputValue, setInputValue] = useState('');
-
-
     const [formInputData, setFormInputData] = useState({ //the data 
         frequency:'',
         interval:'',
-        days_of_the_week: [],
         week_number: '',
         day: '',
         time: '',
         start_date: '',
         end_date: '',
     });
+    const [days_of_the_week, setdays_of_the_week] = useState([])
 
-    const handleInputChange=(evnt)=>{ // handles input changes to all the components
+
+    //input handling
+    const handleInputChange = (evnt) =>{ // handles input changes to all the components
         const inputFieldValue = evnt.target.value;
         const inputFieldName = evnt.target.name;
         const NewInputValue = {...formInputData,[inputFieldName]:inputFieldValue};
@@ -105,20 +105,37 @@ const Main = () =>{
         console.log(evnt.target.value);
         //handles the rendering of components depending on the interval chosen
 
-        if(inputFieldValue === 'week'){
+        if(inputFieldValue === 'weekly'){
             const newweekmonth = [{week: true, month:false}];
             Setwhattorender(newweekmonth);
             
         }
-        else if(inputFieldValue === 'month'){  
+        else if(inputFieldValue === 'monthly'){  
             const newweekmonth = [{week: false, month:true}];
             Setwhattorender(newweekmonth);
         }
-        else if(inputFieldValue === 'day' || inputFieldValue === 'year'){
+        else if(inputFieldValue === 'daily' || inputFieldValue === 'yearly'){
             const newweekmonth = [{week: false, month:false}];
             Setwhattorender(newweekmonth);
         }
     }
+
+    const handleDaysOfWeekChange = (evnt) => {
+
+        const value = evnt.target.checked;
+        const name = evnt.target.value;
+
+        if (value == true) {
+          // Add the new item to the data array
+          setdays_of_the_week((prevData) => [...prevData, name]);
+        } else {
+          // Remove the item with the specified name from the data array
+          setdays_of_the_week((prevData) => prevData.filter((item) => !item.hasOwnProperty(name)));
+        }
+  
+        console.log(name);
+      };
+
 
     const handleFormSubmit =(evnt)=>{
         evnt.preventDefault();
@@ -136,6 +153,7 @@ const Main = () =>{
         window.location.reload();
     }
 
+    // return 
     return (
         <div className="App">   
             <fieldset>
@@ -149,7 +167,7 @@ const Main = () =>{
                             </div>
                         <hr/>
                         <div className="Week" id="Week">
-                            {(whattorender[0].week == true)?<Days_of_the_week days_of_the_week = {formInputData.days_of_the_week} handleInputChange={handleInputChange} dayslist= {daysIntervals}/>: '' }
+                            {(whattorender[0].week == true)?<Days_of_the_week days_of_the_week = {formInputData.days_of_the_week} handleDaysOfWeekChange={handleDaysOfWeekChange} dayslist= {daysIntervals}/>: '' }
                         </div>
 
                         <div className="Month top-items" id="Month">
