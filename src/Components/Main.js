@@ -1,11 +1,10 @@
-import ReactDOM from 'react-dom/client';
+
 import { useState } from "react";
 import Frequency_input from "./frequency_input";
 import Interval_input from './interval'
 import Days_of_the_week from "./days_of_the_week";
 import SubmitButton from './submit_button'
 import RefreshButton from './refresh_button';
-import Cron_output from './cron_output';
 
 //global
 const allintervals = ['daily', 'weekly', 'monthly', ,'yearly'];

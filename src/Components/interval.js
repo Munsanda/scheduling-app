@@ -1,8 +1,8 @@
-import { useState } from "react";
+
 
 function Interval_input({handleInputChange, intervals, id, placeholder}){
 
-    const [selectedDropdownItem, setSelectedDropdownItem] = useState(null);
+    //const [selectedDropdownItem, setSelectedDropdownItem] = useState(null);
     //setSelectedDropdownItem({ id: id });
     return (
         <div className="input-group">
