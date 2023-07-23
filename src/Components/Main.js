@@ -7,8 +7,13 @@ import SubmitButton from './submit_button'
 import RefreshButton from './refresh_button';
 import Cron_output from './cron_output';
 
+//global
+const allintervals = ['daily', 'weekly', 'monthly', ,'yearly'];
+const weekIntervals = ['first','second','third','fourth','last'];
+const daysIntervals = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday','Friday','Saturday'];
+
 //should be is separeate file
-function generateCronExpression(jsonData) {
+function generateCronExpression(jsonData, dotw) {
     let cronExpression = "";
     //time
     const splittime = jsonData.time.split(':')
@@ -40,6 +45,9 @@ function generateCronExpression(jsonData) {
     else{
         cronExpression += '  *';
     }
+
+    //days
+    cronExpression += " " + getDaysIntervalOrList(dotw);
 
     console.log(cronExpression);
 
@@ -75,10 +83,42 @@ function generateCronExpression(jsonData) {
     return dayNumber;
   }
 
+// Function to convert full day names to short-form days (e.g., Monday -> Mon)
+const getShortDayName = (day) => {
+    return day.slice(0, 3); // Extract the first three characters of the day name
+  };
+  
+  // Function to generate the interval or list of short-form days
+  const getDaysIntervalOrList = (days) => {
+    const sortedDays = days.sort((a, b) => daysIntervals.indexOf(a) - daysIntervals.indexOf(b));
+    const shortDays = sortedDays.map(getShortDayName);
+  
+    let result = [];
+    let start = shortDays[0];
+  
+    for (let i = 1; i < shortDays.length; i++) {
+      const prevDay = daysIntervals.indexOf(sortedDays[i - 1]);
+      const currentDay = daysIntervals.indexOf(sortedDays[i]);
+  
+      if (currentDay - prevDay === 1) {
+        // Days are in sequence, continue to next day
+        continue;
+      } else {
+        // End the current interval and add it to the result
+        const end = shortDays[i - 1];
+        result.push(start === end ? start : `${start}-${end}`);
+        start = shortDays[i];
+      }
+    }
+  
+    // Add the last interval or day
+    const lastDay = shortDays[shortDays.length - 1];
+    result.push(start === lastDay ? start : `${start}-${lastDay}`);
+  
+    return result.join(',');
+  };
+
 const Main = () =>{
-    const allintervals = ['daily', 'weekly', 'monthly', ,'yearly'];
-    const weekIntervals = ['first','second','third','fourth','last'];
-    const daysIntervals = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday','Friday','Saturday'];
     
     //states
     const [whattorender, Setwhattorender] = useState([{week:false, month:false}])
@@ -125,13 +165,13 @@ const Main = () =>{
         const value = evnt.target.checked;
         const name = evnt.target.value;
 
-        if (value == true) {
-          // Add the new item to the data array
-          setdays_of_the_week((prevData) => [...prevData, name]);
-        } else {
-          // Remove the item with the specified name from the data array
-          setdays_of_the_week((prevData) => prevData.filter((item) => !item.hasOwnProperty(name)));
-        }
+        if (value === true) {
+            // Add the new item to the data array
+            setdays_of_the_week((prevData) => [...prevData, name]);
+          } else {
+            // Remove the item with the specified name from the data array
+            setdays_of_the_week((prevData) => prevData.filter((item) => item !== name));
+          }
   
         console.log(name);
       };
@@ -143,7 +183,7 @@ const Main = () =>{
         if(checkEmptyInput)
         {   
             //console.log( formInputData);
-            setInputValue(generateCronExpression(formInputData));
+            setInputValue(generateCronExpression(formInputData, days_of_the_week));
 
         }
     }
