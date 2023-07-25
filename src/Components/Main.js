@@ -228,9 +228,8 @@ const Main = () =>{
                     <form method="POST">
                         <div className='top-items'>
                         
-
                             <Interval_input interval={formInputData.interval} handleInputChange={handleInputChange} intervals = {allintervals} id = "interval"  placeholder = {"days, months..."}/>         
-                            <Frequency_input frequency={formInputData.frequency} handleInputChange={handleInputChange} input_type = "number" id = "frequency" placeholder = {"number of days, mon... yea"}/>                       
+                            {/* <Frequency_input frequency={formInputData.frequency} handleInputChange={handleInputChange} input_type = "number" id = "frequency" placeholder = {"number of days, mon... yea"}/>                        */}
                             </div>
                         <hr/>
                         <div className="Week" id="Week">
