@@ -58,6 +58,22 @@ button:hover {
   background-color: #4b0082; /* Indigo */
 }
 
+.middle-items-1 input:focus {
+  background-color: #e3c4f9;
+
+  .middle-items-2 {
+    background-color: white;
+  }
+}
+
+.middle-items-1 input:focus {
+
+} 
+
+.middle-items-1 input:focus {
+  
+} 
+
 input:hover {
   background-color: #e3c4f9;
 }
@@ -80,6 +96,16 @@ input:hover {
   align-items:start; /* Adjust the alignment as needed */
 
   
+}
+
+.middle-items {
+  display: flex;
+  justify-content:space-evenly; /* Adjust the alignment as needed */
+  align-items: center; /* Adjust the alignment as needed */
+}
+
+.middle-items .radios{
+  justify-content:start; /* Adjust the alignment as needed */
 }
 
 
