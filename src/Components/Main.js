@@ -264,7 +264,7 @@ const Main = () =>{
                         </tbody>
                     </table>
 
-                        {(radio[0].radio1 === true)?<Frequency_input time = {formInputData.time} handleInputChange={handleInputChange} input_type = "time" id = "time"/>:<Frequency_input time = {formInputData.time} handleInputChange={handleInputChange} input_type = "text" id = "time" placeholder={"h:m"}/>}
+                        {(radio[0].radio1 === true)?<Frequency_input time = {formInputData.time} handleInputChange={handleInputChange} input_type = "time" id = "time"/>:<Frequency_input time = {formInputData.time} handleInputChange={handleInputChange} input_type = "text" id = "time" placeholder={"hrs:mins"}/>}
                         
 
                         <hr/>                      
