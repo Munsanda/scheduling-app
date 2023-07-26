@@ -8,26 +8,50 @@ import RefreshButton from './refresh_button';
 import RadioButton from './radio'
 
 //global
-const allintervals = ['daily', 'weekly', 'monthly','yearly'];
-const weekIntervals = ['first','second','third','fourth','last'];
+const allintervals = ['daily', 'weekly', 'monthly']; //omitted yearly due to its rare usage
 const daysIntervals = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday','Friday','Saturday'];
 const dotmIntervals = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31];  
-const monthIntervals = [1,2,3,4,5,6,7,8,9,10,11,12];  
+const monthIntervals = [1,2,3,4,5,6,7,8,9,10,11,12]; 
 
-//should be is separeate file
-function generateCronExpression(jsonData, dotw) {
+//should be is separeate file, used to generate the CRON expression
+function generateCronExpression(jsonData, dotw, radio) {
     {/*minute, hour, dom, month*/}
     let cronExpression = "";
     //time
     const splittime = jsonData.time.split(':')
-    if(jsonData.time !== ''){
-        cronExpression += " " + splittime[1] ; //minutes
-        cronExpression += " " + splittime[0]; //hours
+
+    if(radio[0].radio2){
+        if(!splittime[1] || splittime[1] === '00'){
+            cronExpression += " " + '*' ;
+        }
+        else{
+            cronExpression += " " + splittime[1] ; //minutes
+        }
+    
+        if(!splittime[0] || splittime[0] === '00'){
+            cronExpression += " " + '*' ;
+        }
+        else{
+            cronExpression += " " + splittime[0]; //hours
+        }
     }
     else{
-        cronExpression += " " + '*' ; //minutes
-        cronExpression += " " + '*'; //hours
+        if(!splittime[1]){
+            cronExpression += " " + '*' ;
+        }
+        else{
+            cronExpression += " " + splittime[1] ; //minutes
+        }
+    
+        if(!splittime[0]){
+            cronExpression += " " + '*' ;
+        }
+        else{
+            cronExpression += " " + splittime[0]; //hours
+        }        
     }
+
+    
 
     //days of the month 
     const dotm = jsonData.week_number;
@@ -55,74 +79,48 @@ function generateCronExpression(jsonData, dotw) {
     console.log(cronExpression);
 
     return cronExpression;
-   }
-   function calculateCronDayNumber(weekInterval, dayInterval) {
-
-    if(weekInterval === "" || dayInterval === "")
-        return ""; 
-
-    const weekIndex = weekIntervals.indexOf(weekInterval) + 1;
-    const dayIndex = daysIntervals.indexOf(dayInterval) + 1;
-
-  
-    if (weekIndex <= 0 || dayIndex <= 0) {
-      throw new Error("Invalid week or day interval.");
-    }
-    const daysInAWeek = 7;
-    const daysInAMonth = 31;
-    let dayNumber;
-  
-    // Calculate the day number based on the week and day interval
-    if (weekIndex === weekIntervals.length - 1) {
-      // For 'last' week, calculate from the end of the month
-      dayNumber = daysInAMonth - ((daysInAWeek - dayIndex) % daysInAMonth);
-    } else {
-      // For other weeks, calculate using multiples of days in a week
-      dayNumber = (weekIndex - 1) * daysInAWeek + dayIndex;
-    }
-    return dayNumber;
-  }
+}
 
 // Function to convert full day names to short-form days (e.g., Monday -> Mon)
 const getShortDayName = (day) => {
     return day.slice(0, 3); // Extract the first three characters of the day name
   };
   
-  // Function to generate the interval or list of short-form days
-  const getDaysIntervalOrList = (days) => {
-    const sortedDays = days.sort((a, b) => daysIntervals.indexOf(a) - daysIntervals.indexOf(b));
-    const shortDays = sortedDays.map(getShortDayName);
-  
-    let result = [];
-    let start = shortDays[0];
-  
-    for (let i = 1; i < shortDays.length; i++) {
-      const prevDay = daysIntervals.indexOf(sortedDays[i - 1]);
-      const currentDay = daysIntervals.indexOf(sortedDays[i]);
-  
-      if (currentDay - prevDay === 1) {
-        // Days are in sequence, continue to next day
-        continue;
-      } else {
-        // End the current interval and add it to the result
-        const end = shortDays[i - 1];
-        result.push(start === end ? start : `${start}-${end}`);
-        start = shortDays[i];
-      }
+// Function to generate the interval or list of short-form days
+const getDaysIntervalOrList = (days) => {
+const sortedDays = days.sort((a, b) => daysIntervals.indexOf(a) - daysIntervals.indexOf(b));
+const shortDays = sortedDays.map(getShortDayName);
+
+let result = [];
+let start = shortDays[0];
+
+for (let i = 1; i < shortDays.length; i++) {
+    const prevDay = daysIntervals.indexOf(sortedDays[i - 1]);
+    const currentDay = daysIntervals.indexOf(sortedDays[i]);
+
+    if (currentDay - prevDay === 1) {
+    // Days are in sequence, continue to next day
+    continue;
+    } else {
+    // End the current interval and add it to the result
+    const end = shortDays[i - 1];
+    result.push(start === end ? start : `${start}-${end}`);
+    start = shortDays[i];
     }
-  
-    // Add the last interval or day
-    const lastDay = shortDays[shortDays.length - 1];
-    result.push(start === lastDay ? start : `${start}-${lastDay}`);
-  
-    return result.join(',');
-  };
+}
+
+// Add the last interval or day
+const lastDay = shortDays[shortDays.length - 1];
+result.push(start === lastDay ? start : `${start}-${lastDay}`);
+
+return result.join(',');
+};
 
 const Main = () =>{
     
     //states
-    const [whattorender, Setwhattorender] = useState([{day:false,week:false, month:false,year:false}])
-    const [radio, setRadio] = useState([{radio1:false,radio2:false}]);
+    const [whattorender, Setwhattorender] = useState([{day:false,week:false, month:false,year:false}])// sets what comp to render depending on interval chosen
+    const [radio, setRadio] = useState([{radio1:true,radio2:false}]);//sets time to at or every
     const [inputValue, setInputValue] = useState('');
     const [formInputData, setFormInputData] = useState({ //the data 
         frequency:'',
@@ -155,8 +153,12 @@ const Main = () =>{
             const newweekmonth = [{week: false, month:true}];
             Setwhattorender(newweekmonth);
         }
-        else if(inputFieldValue === 'daily' || inputFieldValue === 'yearly'){
+        else if(inputFieldValue === 'daily'){
             const newweekmonth = [{week: false, month:false}];
+            Setwhattorender(newweekmonth);
+        }
+        else if(inputFieldValue === 'yearly'){
+            const newweekmonth = [{day:true,week:false, month:true,year:true}];
             Setwhattorender(newweekmonth);
         }
     }
@@ -191,23 +193,14 @@ const Main = () =>{
           }
   
         console.log(name);
-      };
-
-    const handleDaysOfMonthChange = (evnt) => {
-        const id = evnt.target.id;
-        const value = evnt.target.value;
-
-        console.log(value);
-    };
-
+    }
     const handleFormSubmit =(evnt)=>{
         evnt.preventDefault();
         const checkEmptyInput = !Object.values(formInputData).every(res=>res==="")
         if(checkEmptyInput)
         {   
             //console.log( formInputData);
-            setInputValue(generateCronExpression(formInputData, days_of_the_week));
-
+            setInputValue(generateCronExpression(formInputData, days_of_the_week,radio));
         }
     }
 
@@ -248,7 +241,6 @@ const Main = () =>{
 
                     <table className="top-items">
                         <tbody>
-
                             <tr>
                                 <td>
                                 <RadioButton id = {"radioTime1"} name = "radioTime" handleRadioChange = {handleRadioChange}/>
@@ -259,13 +251,9 @@ const Main = () =>{
                             <label>Every:</label>
                                 </td>
                             </tr>
-
-
                         </tbody>
                     </table>
-
-                        {(radio[0].radio1 === true)?<Frequency_input time = {formInputData.time} handleInputChange={handleInputChange} input_type = "time" id = "time"/>:<Frequency_input time = {formInputData.time} handleInputChange={handleInputChange} input_type = "text" id = "time" placeholder={"hrs:mins"}/>}
-                        
+                        {(radio[0].radio1 === true)?<Frequency_input time = {formInputData.time} handleInputChange={handleInputChange} input_type = "time" id = "time"/>:<Frequency_input time = {formInputData.time} handleInputChange={handleInputChange} input_type = "text" maxlen = "5" id = "time" placeholder={"hrs:mins"}/>}
 
                         <hr/>                      
                         {/* <label htmlFor='start_date'>starts:</label>
