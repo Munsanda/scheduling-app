@@ -65,13 +65,13 @@ function generateCronExpression(jsonData, dotw, radio) {
         cronExpression += '  *';
     }
 
-    //year
-    if(jsonData.interval === 'yearly'){
-        cronExpression += " " + jsonData.frequency;
-    }
-    else{
-        cronExpression += '  *';
-    }
+    // //year
+    // if(jsonData.interval === 'yearly'){
+    //     cronExpression += " " + jsonData.frequency;
+    // }
+    // else{
+    //     cronExpression += '  *';
+    // }
 
     //days
     cronExpression += " " + getDaysIntervalOrList(dotw);
