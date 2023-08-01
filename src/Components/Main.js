@@ -76,6 +76,8 @@ function generateCronExpression(jsonData, dotw, radio) {
     //days
     cronExpression += " " + getDaysIntervalOrList(dotw);
 
+    cronExpression += " " + jsonData.user +  " " + jsonData.command;
+
     console.log(cronExpression);
 
     return cronExpression;
@@ -128,8 +130,8 @@ const Main = () =>{
         week_number: '',
         day: '',
         time: '',
-        start_date: '',
-        end_date: '',
+        user: '',
+        command: '',
     });
     const [days_of_the_week, setdays_of_the_week] = useState([]);
 
@@ -215,7 +217,7 @@ const Main = () =>{
     return (
         <div className="App">   
             <fieldset>
-            <legend>scheduler</legend>
+            <legend>SCHEDULER</legend>
             <div className="row">
                 <div className="col-sm-4">
                     <form method="POST">
@@ -256,11 +258,11 @@ const Main = () =>{
                         {(radio[0].radio1 === true)?<Frequency_input time = {formInputData.time} handleInputChange={handleInputChange} input_type = "time" id = "time"/>:<Frequency_input time = {formInputData.time} handleInputChange={handleInputChange} input_type = "text" maxlen = "5" id = "time" placeholder={"hrs:mins"}/>}
 
                         <hr/>                      
-                        {/* <label htmlFor='start_date'>starts:</label>
-                        <Frequency_input start_date = {formInputData.start_date} handleInputChange={handleInputChange} input_type = "date" id = "start_date"/>
+                         <label htmlFor='user'>user:</label>
+                        <Frequency_input start_date = {formInputData.start_date} handleInputChange={handleInputChange} input_type = "text" id = "user"/>
 
-                        <label htmlFor='end_date'>ends:</label>
-                        <Frequency_input end_date = {formInputData.end_date} handleInputChange={handleInputChange} input_type = "date" id = "end_date"/> */}
+                        <label htmlFor='command'>command:</label>
+                        <Frequency_input end_date = {formInputData.end_date} handleInputChange={handleInputChange} input_type = "text" id = "command"/> 
                         
                         <label htmlFor='cronE'>CRON:</label> 
                         {(inputValue !== '')?<input value = {inputValue} input_type="text" id="cronE" placeholder = {""} />: <input value = {inputValue} input_type="text" id="cronE" placeholder = {""} />}
