@@ -12,9 +12,10 @@ const allintervals = ['daily', 'weekly', 'monthly']; //omitted yearly due to its
 const daysIntervals = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday','Friday','Saturday'];
 const dotmIntervals = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31];  
 const monthIntervals = [1,2,3,4,5,6,7,8,9,10,11,12]; 
+const monthsIntervals = ['january','february','march','april','may','june','july','august','september','october','november','december'];
 
 //should be is separeate file, used to generate the CRON expression
-function generateCronExpression(jsonData, dotw, radio) {
+function generateCronExpression(jsonData, dotw, radio, monthslist) {
     {/*minute, hour, dom, month*/}
     let cronExpression = "";
     //time
@@ -57,21 +58,16 @@ function generateCronExpression(jsonData, dotw, radio) {
     const dotm = jsonData.week_number;
     cronExpression += (dotm !== '')? " " + dotm: '  *';
 
+
+
     //month
-    if(jsonData.day !== ''){
-        cronExpression += " " + jsonData.day;
+    if(jsonData.day == ''){
+        cronExpression += " " + getMonthsIntervalOrList(monthslist);
     }
     else {
-        cronExpression += '  *';
+        cronExpression += " " + jsonData.day;
     }
 
-    // //year
-    // if(jsonData.interval === 'yearly'){
-    //     cronExpression += " " + jsonData.frequency;
-    // }
-    // else{
-    //     cronExpression += '  *';
-    // }
 
     //days
     cronExpression += " " + getDaysIntervalOrList(dotw);
@@ -118,6 +114,34 @@ result.push(start === lastDay ? start : `${start}-${lastDay}`);
 return result.join(',');
 };
 
+const getMonthsIntervalOrList = (months) => {
+    const sortedMonths = months.sort((a, b) => monthsIntervals.indexOf(a) - monthsIntervals.indexOf(b));
+    const shortMonths = sortedMonths.map(getShortDayName);
+
+    let result = [];
+    let start = shortMonths[0];
+
+    for (let i = 1; i < shortMonths.length; i++) {
+        const prevMonth = monthsIntervals.indexOf(sortedMonths[i - 1]);
+        const currentMonth = monthsIntervals.indexOf(sortedMonths[i]);
+
+        if (currentMonth - prevMonth === 1) {
+            // Months are in sequence, continue to the next month
+            continue;
+        } else {
+            // End the current interval and add it to the result
+            const end = shortMonths[i - 1];
+            result.push(start === end ? start : `${start}-${end}`);
+            start = shortMonths[i];
+        }
+    }
+
+    // Add the last interval to the result
+    result.push(start === shortMonths[shortMonths.length - 1] ? start : `${start}-${shortMonths[shortMonths.length - 1]}`);
+
+    return result;
+};
+
 const Main = () =>{
     
     //states
@@ -134,6 +158,7 @@ const Main = () =>{
         command: '',
     });
     const [days_of_the_week, setdays_of_the_week] = useState([]);
+    const [month, setmonth] = useState([]);
 
 
     //input handling
@@ -196,13 +221,31 @@ const Main = () =>{
   
         console.log(name);
     }
+
+
+    const handleMonthChange = (evnt) => {
+
+        const value = evnt.target.checked;
+        const name = evnt.target.value;
+
+        if (value === true) {
+            // Add the new item to the data array
+            setmonth((prevData) => [...prevData, name]);
+          } else {
+            // Remove the item with the specified name from the data array
+            setmonth((prevData) => prevData.filter((item) => item !== name));
+          }
+  
+        console.log(name);
+    }
+
     const handleFormSubmit =(evnt)=>{
         evnt.preventDefault();
         const checkEmptyInput = !Object.values(formInputData).every(res=>res==="")
         if(checkEmptyInput)
         {   
             //console.log( formInputData);
-            setInputValue(generateCronExpression(formInputData, days_of_the_week,radio));
+            setInputValue(generateCronExpression(formInputData, days_of_the_week,radio,month));
         }
     }
 
@@ -225,14 +268,6 @@ const Main = () =>{
                         
                             <Interval_input interval={formInputData.interval} handleInputChange={handleInputChange} intervals = {allintervals} id = "interval"  placeholder = {"days, months..."}/>         
                             {/* <Frequency_input frequency={formInputData.frequency} handleInputChange={handleInputChange} input_type = "number" id = "frequency" placeholder = {"number of days, mon... yea"}/>                        */}
-                            </div>
-                        <hr/>
-                        <div className="Week" id="Week">
-                            {(whattorender[0].week === true)?<Days_of_the_week days_of_the_week = {formInputData.days_of_the_week} handleDaysOfWeekChange={handleDaysOfWeekChange} dayslist= {daysIntervals}/>: '' }
-                        </div>
-
-                        <div  className="Month top-items-left" id="Month">
-                            {(whattorender[0].month === true)?<Days_of_the_week days_of_the_week = {formInputData.days_of_the_week} handleDaysOfWeekChange={handleDaysOfWeekChange} dayslist= {daysIntervals}/>: '' }
                         </div>
 
                         <div className="Month top-items" id="Month">
@@ -240,6 +275,19 @@ const Main = () =>{
                             
                             {(whattorender[0].month === true)?<Interval_input day = {formInputData.day} handleInputChange={handleInputChange} intervals={monthIntervals} id ="day" placeholder = {"month"}/>: '' }
                         </div>  
+
+                        <div  className="Month top-items-left" id="Month">
+                            {(whattorender[0].month === true)?<div><hr/><Days_of_the_week days_of_the_week = {formInputData.days_of_the_week} handleDaysOfWeekChange={handleMonthChange} dayslist= {monthsIntervals}/><hr/></div>: '' }
+                            {/* {(whattorender[0].month === true)?<div><Days_of_the_week days_of_the_week = {formInputData.days_of_the_week} handleDaysOfWeekChange={handleDaysOfWeekChange} dayslist= {daysIntervals}/><hr/></div>: '' } */}
+                        </div>
+                        
+                        <div className="Week" id="Week">
+                            {(whattorender[0].week === true)?<div><Days_of_the_week days_of_the_week = {formInputData.days_of_the_week} handleDaysOfWeekChange={handleDaysOfWeekChange} dayslist= {daysIntervals}/><hr/></div>: '' }
+                        </div>
+
+
+
+
 
                     <table className="top-items">
                         <tbody>

@@ -13,7 +13,9 @@ fieldset {
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   padding: 20px;
-  max-width: 400px;
+  width: 380px;
+
+  min-width: 390px;
   font-display: bold;
 }
 
@@ -66,13 +68,9 @@ button:hover {
   }
 }
 
-.middle-items-1 input:focus {
-
-} 
-
-.middle-items-1 input:focus {
-  
-} 
+.top-items-left{
+  display: block;
+}
 
 input:hover {
   background-color: #e3c4f9;
@@ -92,10 +90,10 @@ input:hover {
 
 .days_of_the_week {
   display: flex;
-  justify-content: space-between; /* Adjust the alignment as needed */
-  align-items:start; /* Adjust the alignment as needed */
-
-  
+  justify-content: space-between;
+  align-items: start;
+  flex-wrap: wrap; /*  to allow items to wrap to the next line */
+  flex-direction: row;
 }
 
 .middle-items {

@@ -11,7 +11,7 @@ function Days_of_the_week({handleInputChange, days_of_the_week, dayslist, handle
               return (
                 (day != "")? 
                 <div className="Container">
-                  <label htmlFor={day}>{day[0]}</label>
+                  <label htmlFor={day}>{day.slice(0,3)}</label>
                   <input type="checkbox" value= {day} label={day} name="day"/>
                 </div>: ""
               )
